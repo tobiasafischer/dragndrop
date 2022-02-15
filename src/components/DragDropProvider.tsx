@@ -126,6 +126,11 @@ const DragDropProvider: React.FC<{ data: ColumnType[] }> = ({ children, data }) 
 
    // determining if its diff col or same col for row movement
    const handleRowMove: DragDropProps = (source, destination) => {
+      // droppableId is in reference to what column it is so if they are the same,
+      // then both droppableId's are the same,
+      // if its diff columns then they not the same
+      // btw since columns are dynamically instantiated, the droppableId i used is uuid
+
       if (source.droppableId !== destination.droppableId) {
          moveRowDifferentColumn(source, destination)
       } else {
@@ -135,6 +140,8 @@ const DragDropProvider: React.FC<{ data: ColumnType[] }> = ({ children, data }) 
 
    // move columns
    const handleColumnMove: DragDropProps = (source, destination) =>
+      // rememeber that source and dest are just { draggableId, index }
+      // moving columns (:
       setColumns((prev) => {
          const updated = [...prev]
          // remove source column
@@ -200,11 +207,12 @@ const DragDropProvider: React.FC<{ data: ColumnType[] }> = ({ children, data }) 
    }
 
    const handleDragUpdate = (event) => {
-      if (!event.destination) return
+      const { source, destination } = event
+      if (!destination) return
       if (event.type === 'column') {
-         handleDropshadowColumn(event, event.destination.index, event.source.index)
+         handleDropshadowColumn(event, destination.index, source.index)
       } else {
-         handleDropshadowRow(event, event.destination.index, event.source.index)
+         handleDropshadowRow(event, destination.index, source.index)
       }
    }
 
@@ -219,11 +227,20 @@ const DragDropProvider: React.FC<{ data: ColumnType[] }> = ({ children, data }) 
    }
 
    const handleDragEnd = (result: DropResult) => {
+      // if there is no destination, theres nothing to manipulate so lets
+      // nope out of there REAL quick
       if (!result.destination) return
+      // we only care about source and destination so lets just grab those
       const { source, destination } = result
+      // if our droppableId is all-columns that means that we are
+      // dragging columns around because remember we did not have to
+      // dynamically instantiate our top level droppable so we hard coded
+      // the id
       if (source.droppableId === 'all-columns') {
+         // we go this function to handle the column movement
          handleColumnMove(source, destination)
       } else {
+         // else its a row move so we go here
          handleRowMove(source, destination)
       }
    }
