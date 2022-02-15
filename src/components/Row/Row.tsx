@@ -1,20 +1,17 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd'
+import styled from 'styled-components'
 import { TaskType } from '../../assets'
 
 const Container = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
-   height: 26px;
-   width: 100%;
-   box-sizing: border-box;
-   padding: 5px 10px;
-   border: 1px solid #333;
    border-radius: 4px;
-   font-size: 14px;
+   width: 100%;
+   height: 50px;
    margin-bottom: 10px;
+   border: 1px solid;
 `
 
 type Props = {

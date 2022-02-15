@@ -1,17 +1,12 @@
 import React from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import Column from '../Column/Column'
-import { ColumnDropshadow, Container } from './Board.styled'
 import { useDragDrop } from '../DragDropProvider'
+import { ColumnDropshadow, Container } from './Board.styled'
 
 const Board: React.FC = () => {
-   const {
-      handleDragEnd,
-      handleDragStart,
-      handleDragUpdate,
-      colDropshadowProps,
-      columns,
-   } = useDragDrop()
+   const { handleDragEnd, handleDragStart, handleDragUpdate, colDropshadowProps, columns } =
+      useDragDrop()
 
    return (
       <DragDropContext
@@ -26,12 +21,12 @@ const Board: React.FC = () => {
                      <Column key={column.id} column={column} columnIndex={columnIndex} />
                   ))}
                   {provided.placeholder}
-                  {/* {snapshot.isDraggingOver && ( */}
-                  <ColumnDropshadow
-                     marginLeft={colDropshadowProps.marginLeft}
-                     height={colDropshadowProps.height}
-                  />
-                  {/* )} */}
+                  {snapshot.isDraggingOver && (
+                     <ColumnDropshadow
+                        marginLeft={colDropshadowProps.marginLeft}
+                        height={colDropshadowProps.height}
+                     />
+                  )}
                </Container>
             )}
          </Droppable>

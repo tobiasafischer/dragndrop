@@ -1,6 +1,7 @@
-import './styles.css'
-import { Board, DragDropProvider } from './components'
+import React from 'react'
 import { api } from './assets'
+import { Board, DragDropProvider } from './components'
+import './styles.css'
 
 const App: React.FC = () => (
    <div className="App">

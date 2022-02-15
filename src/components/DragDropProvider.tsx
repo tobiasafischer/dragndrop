@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { DraggableLocation, DropResult } from 'react-beautiful-dnd'
 import { v4 } from 'uuid'
-import { ColumnType } from '../assets/api'
+import { ColumnType } from '../assets'
 
 type DragDropProps = (source: DraggableLocation, destination: DraggableLocation) => void
 
@@ -32,7 +32,7 @@ type DragDropContextProps = {
 const DragDropContext = React.createContext<DragDropContextProps | undefined>(undefined)
 
 // grabbing element currently being dragged from the dom
-const getDraggedElement = (draggableId: any) => {
+const getDraggedElement = (draggableId) => {
    const queryAttr = 'data-rbd-drag-handle-draggable-id'
    const domQuery = `[${queryAttr}='${draggableId}']`
    const draggedElement = document.querySelector(domQuery)
@@ -166,8 +166,8 @@ const DragDropProvider: React.FC<{ data: ColumnType[] }> = ({ children, data }) 
       )
       // setting our props
       setRowDropshadowProps({
-         height: clientHeight,
-         marginTop,
+         height: clientHeight + 2,
+         marginTop: marginTop + 2 * destinationIndex,
       })
    }
 
@@ -199,11 +199,7 @@ const DragDropProvider: React.FC<{ data: ColumnType[] }> = ({ children, data }) 
       })
    }
 
-   const handleDragUpdate = (event: {
-      destination: { index: number }
-      type: string
-      source: { index: number }
-   }) => {
+   const handleDragUpdate = (event) => {
       if (!event.destination) return
       if (event.type === 'column') {
          handleDropshadowColumn(event, event.destination.index, event.source.index)
@@ -212,7 +208,7 @@ const DragDropProvider: React.FC<{ data: ColumnType[] }> = ({ children, data }) 
       }
    }
 
-   const handleDragStart = (event: { source: { index: any }; type: string }) => {
+   const handleDragStart = (event) => {
       // the destination and source colIndex will be the same for start
       const { index } = event.source
       if (event.type === 'column') {

@@ -6,17 +6,17 @@ import {
    DroppableProvided,
    DroppableStateSnapshot,
 } from 'react-beautiful-dnd'
+import { ColumnType } from '../../assets/api'
 import { useDragDrop } from '../DragDropProvider'
 import { Row } from '../Row'
 import {
    Container,
-   TitleContainer,
-   Title,
-   RowContainer,
    DropshadowContainer,
+   RowContainer,
    RowDropshadow,
+   Title,
+   TitleContainer,
 } from './Column.styled'
-import { ColumnType } from '../../assets/api'
 
 type Props = {
    column: ColumnType

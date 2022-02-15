@@ -4,25 +4,26 @@ export const Container = styled.div`
    display: flex;
    justify-content: flex-start;
    align-items: flex-start;
-   width: 100%;
-   height: auto;
-   border: 1px solid;
-   box-sizing: border-box;
-   padding: 20px 25px;
    position: relative;
-   overflow-x: scroll;
+   width: 100%;
+   height: 100%;
+   margin-top: 10px;
+   overflow-x: auto;
+   overflow-y: auto;
+   white-space: nowrap;
+   box-sizing: border-box;
+   padding: 10px 20px;
 `
 
-type Props = {
+type DropshadowProps = {
    height: number
 }
 
-export const Dropshadow = styled.div<Props>`
+export const Dropshadow = styled.div<DropshadowProps>`
    border-radius: 3px;
-   position: absolute;
    background-color: #ddd;
+   width: 302px;
    height: ${({ height }) => height}px;
-   width: 150px;
    z-index: 1;
 `
 
@@ -31,6 +32,6 @@ type ColumnDropshadowProps = {
 }
 
 export const ColumnDropshadow = styled(Dropshadow)<ColumnDropshadowProps>`
-   top: 20px;
-   margin-left: ${({ marginLeft }) => marginLeft}px;
+   margin-left: ${({ marginLeft }) => marginLeft - 1}px;
+   position: absolute;
 `
