@@ -1,24 +1,20 @@
-THIS IS DOCUMENTATION I WROTE FOR DUBSADO
-
 # Drag and Drop !!
-
-# DISCLAIMER PLACEHOLDER AND DROPSHADOW ARE USED INTERCHANGEABLY WE CHANGED THE NAME HALF WAY THROUGH AND NO WAY IN HELL AM I UPDATING IT LOL
 
 ## Why are you writing documentation? Don’t they have some?
 
-Sure! react-beautiful-dnd (we will be calling it rbdnd) has [documentation](https://github.com/atlassian/react-beautiful-dnd), but if I am speaking to you straight, the syntax of this library is so confusing and not intuitive at all. 90% of the examples you will find online are also done in classical react with some of the worst practices you will see (a 5 year old learning scratch can do it better lol). Partly this is because the library is no longer being actively maintained, but it is still a super solid library which is pretty versatile. 
+Documentation for react-beautiful-dnd, also known as rbdnd, is indeed available and can be found here. However, it is important to note that some developers may find the syntax of this library to be complex and unintuitive. It is worth mentioning that a significant portion of the online examples are implemented using traditional React practices that may not adhere to recommended coding standards. Consequently, it is advisable to exercise caution when referring to such examples. Despite the library no longer being actively maintained, it remains a reliable and versatile solution.
 
 ## Okay, what variables am I working with?
 
-So, with a lot of react libraries you will see the use of [context](https://reactjs.org/docs/context.html). In rbdnd, on the top level of ANY dragging / dropping we wrap with
+Now, in the context of react-beautiful-dnd and similar React libraries, the use of [context](https://reactjs.org/docs/context.html) is a common pattern. Within rbdnd, it is customary to encapsulate the top-level component responsible for drag and drop functionality with a specific context wrapper.
 
 ```tsx
 <DragDropContext />
 ```
 
-Drag and drop context can actually do quite a bit but for this case, we will focus specifically on onDragEnd (thats a mouthful lol). OnDragEnd is a function that supplies you with a result object
+The onDragEnd function within the drag and drop context plays a significant role and offers extensive capabilities. However, for the purpose of this case, we will focus specifically on the onDragEnd function, which provides a result object.
 
-THIS IS A LOT RIGHT?! Don’t worry though we really only care about ***source*** and ***destination*** which we will get into later on. ANYWAYS, think of onDragEnd the same as a form onSubmit which triggers the function when the action is done. 
+The onDragEnd function might initially appear overwhelming, but fear not, as we will concentrate primarily on two key properties: source and destination, which will be discussed in more detail later on. It is helpful to conceptualize onDragEnd as analogous to the onSubmit function of a form, triggering the execution of the associated logic upon completion of the drag and drop action.
 
 ```tsx
 // result example
@@ -39,19 +35,17 @@ THIS IS A LOT RIGHT?! Don’t worry though we really only care about ***source**
 }
 ```
 
-Lets get into the spicy stuff 💯 💅 🔥
-
-So our next variable is the wonderful 
+Our next variable is
 
 ```tsx
 <Droppable />
 ```
 
-Droppable is basically a container that a draggable item is able to be dropped in. It takes a couple of props but really all we care about is ***droppableId***, ***direction***, and ***type***. As you can see above in result,  we see this “droppableId” fella come up OFTEN so get used to them. Basically all this does is lets us identify which thingy we are dropping our drag into so we can manipulate the array appropriately. If you have ONE droppable, you can hardcode the droppableId (because there’s only one thing to drop on duh!), however, for dynamic lists you want to use a custom id (i just used uuid in this case) to differentiate the children (think of it like a key).
+Droppable serves as a container that enables the placement of a draggable item. While it possesses multiple properties, our primary focus lies on the essential ones, namely droppableId, direction, and type. As demonstrated in the aforementioned output, the "droppableId" identifier frequently appears, thus warranting familiarity with it. Essentially, this identifier allows us to determine the specific element into which we are dropping our draggable item, facilitating appropriate manipulation of the corresponding array. In scenarios where a single droppable area suffices (owing to the presence of only one possible target), hardcoding the droppableId is a viable option. However, when dealing with dynamic lists, it is advisable to employ a custom identifier (such as uuid, as illustrated in this instance) to differentiate the individual child elements, akin to using a key.
 
-If you wanna get a lil more abstract think of Droppable like a container for your draggable children lol.
+For a more abstract perspective, one can liken Droppable to a container that accommodates draggable children.
 
-(if you want the actual props)
+(If you require the specific properties)
 
 ```tsx
 type Props = {|
@@ -73,19 +67,25 @@ type DroppableMode = 'standard' | 'virtual';
 type Direction = 'horizontal' | 'vertical'
 ```
 
-Now for the real juicer of this library, the bad boy, the cool kid, etc. which is 
+Now for the real meat of the library:
 
 ```tsx
 <Draggable />
 ```
 
-Draggable is what is attached to the actual container you wish to drag into the droppable areas. The syntax of draggableId (like a uuid or any unique identifier for dynamically instantiated draggables, or such as droppable, if its a singular draggable piece, you can choose any id) and an index which is used to determine the position of the object you are dragging (when mapping your array just do 
+Draggable refers to the component that is affixed to the designated container, allowing it to be dragged into the droppable regions. The draggableId syntax, resembling a universally unique identifier (UUID) or any other distinctive identifier for dynamically generated draggables, plays a crucial role. Alternatively, for singular draggable elements like droppable, any desired identifier can be chosen. Additionally, an index parameter is utilized to ascertain the object's position during the array mapping process.
 
 ```tsx
-{arr.map(({content, id}, idx) => <Component key={id} id={id} idx={idx}>{item}</Component>)}
+{
+	arr.map(({ content, id }, idx) => (
+		<Component key={id} id={id} idx={idx}>
+			{item}
+		</Component>
+	));
+}
 ```
 
-(if you want the actual props)
+(If you require the specific properties)
 
 ```tsx
 type Props = {|
@@ -100,13 +100,11 @@ type Props = {|
 |};
 ```
 
-## Okay! are you still with me? now let’s complicate everything 😳💅
+In addition to the Draggables and Droppables, this library introduces the notable entities known as provided and snapshot. As I assume that this syntax may be unfamiliar to you, kindly allow me to provide an explanation.
 
-SO, this library isn’t just sunshine and rainbows of Draggables and Droppables... let me introduce to you the lovely ***provided*** and ***snapshot.*** I am going to assume that this syntax is brand new to you so bear with me.
+Following the declaration of any Droppable or Draggable component, it is necessary to include a function that encapsulates the variables of the provided and snapshot objects. These objects play a pivotal role in distributing props to the JSX elements and serve as the core functionality of this library.
 
-Immediately following any Droppable or Draggable, you must provide a function underneath that holds the variables of provided and snapshot objects. These objects are used to distribute props to the jsx and act as the core functionality of this library.
-
-Now, although they have near identical syntax, there is DroppableProvided and DraggableProvided with the exact same input but with a few discrepancies.
+Although their syntax is strikingly similar, it is important to note that there exist two distinct entities: DroppableProvided and DraggableProvided. Despite their shared input, a few discrepancies set them apart.
 
 ```tsx
 type DroppableProvided = {|
@@ -132,15 +130,14 @@ type DraggableProvided = {|
 |};
 ```
 
-Let’s start with Droppable,  droppable has a provided object which holds (as shown above) innerRef, droppableProps, and placeholder (we will get into placeholder later). A brief introduction into what the props actually do is
+Now, let us delve into the functionality of Droppable. Within Droppable, you will encounter the provided object, which includes the following properties: innerRef, droppableProps, and placeholder (which will be further discussed later). To provide a brief overview of these props:
 
-| innerRef | ref obj to put on container to allow the div to be dropped into |
-| --- | --- |
-| droppableProps | the functionality of the droppability that is tied to the div |
-| placeholder | div that acts as the placeholder for the obj you are dragging |
+| innerRef       | A reference object that is applied to the container, enabling the div to be a drop target. |
+| -------------- | ------------------------------------------------------------------------------------------ |
+| droppableProps | The set of functionalities associated with the droppable nature of the div.                |
+| placeholder    | A div element that acts as a placeholder for the object being dragged.                     |
 
-So, let’s dive in and get this show on the road
-
+Okay! Here is the code we will be working with:
 [https://codesandbox.io/s/github/tobiasafischer/dragndrop/tree/main/](https://codesandbox.io/s/github/tobiasafischer/dragndrop/tree/main/)
 
 ```tsx
@@ -165,12 +162,12 @@ const Board: React.FC = () => {
 						{/* notice our provided object destructured */
             {(provided, snapshot) => (
                {/* immedietely have our (in this case columns) mapped */}
-							 {/* provide id and index IMPORTANT */} 
+							 {/* provide id and index IMPORTANT */}
                <Container id="task-board" {...provided.droppableProps} ref={provided.innerRef}>
                   {columns.map((column, columnIndex) => (
                      <Column key={column.id} column={column} columnIndex={columnIndex} />
                   ))}
-                  {/* put placeholder on same level as mapping in place of it 
+                  {/* put placeholder on same level as mapping in place of it
 									think of it like you are having a placeholder for the mapped items */}
                   {provided.placeholder}
                   {snapshot.isDraggingOver && (
@@ -189,7 +186,7 @@ const Board: React.FC = () => {
 export default Board
 ```
 
-As you can see upfront it can get really confusing and overwhelming, but if you are able to break it down into these sections you can start to fill in the bigger picture. Now, let’s discuss the draggable implementation  by filling out the Column component as shown above.
+The initial impression may appear perplexing and overwhelming due to the complex nature of the topic at hand. However, by breaking it down into distinct sections, one can gradually assemble a comprehensive understanding of the subject matter. With this approach in mind, let us now delve into the implementation of the draggable functionality by examining the Column component, as illustrated in the aforementioned code snippet.
 
 ```tsx
 import React, { useEffect } from 'react'
@@ -223,11 +220,11 @@ const Column: React.FC<Props> = ({ column, columnIndex }) => {
    return (
 	    {/* we declare that this whole div is going to be draggable by adding the id and index */}
       <Draggable draggableId={column.id} index={columnIndex}>
-				 {/* immedietely declare your provided object */}         
+				 {/* immedietely declare your provided object */}
 				 {(provided: DraggableProvided) => (
-						{/* 
+						{/*
 							This this is where we declare that this div is going to be draggable
-							by providing the draggableProps spread and the innerRef		
+							by providing the draggableProps spread and the innerRef
 						*/}
             <Container {...provided.draggableProps} ref={provided.innerRef}>
                <TitleContainer>
@@ -260,9 +257,9 @@ const Column: React.FC<Props> = ({ column, columnIndex }) => {
 export default Column
 ```
 
-Perfect! You made your first drag and drop for the columns, which drag left to right and vice versa. Now let’s spice things up for a sec and add some rows
+Excellent! You have successfully implemented your initial drag and drop functionality for the columns, allowing them to be dragged from left to right and vice versa. Now, let's take a moment to enhance the interaction by introducing rows.
 
-Hooooonnnneeesssstttllllyyyyyy Rows are going to be the exact same as Column but actually way easier TRUST ME.
+Honestly, implementing rows follows the exact same process as columns, but in fact, it is even easier. Trust me on this, and you'll see how straightforward it is.
 
 ```tsx
 import React from 'react'
@@ -291,7 +288,7 @@ const Row: React.FC<Props> = ({ task, index }) => (
       {(provided: DraggableProvided) => (
 				{/* we dont wanna drag by a title so we put both our draggable
 						and dragHandleProps so we can drag it by the div itself (across columns
-						too... WOOOWWWWWWWW big brain		
+						too)
 				*/}
          <Container
             {...provided.draggableProps}
@@ -307,9 +304,9 @@ const Row: React.FC<Props> = ({ task, index }) => (
 export default Row
 ```
 
-So now that our brains are 5x the normal size, let’s get them a little bigger with the actual logic behind our code so we can actually persist our dragging.
+Now that we have expanded our understanding significantly, let us further enrich our knowledge by exploring the underlying logic of our code, which will enable us to effectively persist our dragging operations.
 
-Okay so let’s start off easy with something that we know! Remember all the way back up north about our DragDropContext and specifically onDragEnd? We’ll get locked and loaded because that’s coming up RIGHT NOW.
+To begin, let's revisit the familiar concept we previously discussed, the DragDropContext, and more specifically, the onDragEnd event. Prepare yourself, as we are about to dive deep into this essential aspect of our implementation.
 
 ```tsx
 // result is this
@@ -331,8 +328,7 @@ Okay so let’s start off easy with something that we know! Remember all the way
 // ^ 90% of this is absolutely useless
 
 const handleDragEnd = (result: DropResult) => {
-  // if there is no destination, theres nothing to manipulate so lets
-  // nope out of there REAL quick
+  // if there is no destination, theres nothing to manipulate so lets exit
   if (!result.destination) return
 
   // we only care about source and destination so lets just grab those
@@ -354,133 +350,129 @@ const handleDragEnd = (result: DropResult) => {
 }
 ```
 
-Ok NOT TOO SHABBY right ?! I am glad you’re still with me because up next is when the fun begins 
+Impressive progress thus far, wouldn't you agree? I appreciate your continued engagement, as we are now about to embark on an exciting phase of our implementation.
 
-Let’s start with handleColumnMove
-
-also here’s the props we working with
+Firstly, let's focus on the handleColumnMove function, which marks the beginning of our exciting journey. Additionally, allow me to provide you with an overview of the props we will be working with in this context.
 
 ```tsx
 // this is for task board so task and row are interchangable
 export type TaskType = {
-   content: string
-   id: any
-}
+	content: string;
+	id: any;
+};
 
 export type TaskColumnType = {
-   id: any
-   title: string
-   rows: TaskType[]
-}
+	id: any;
+	title: string;
+	rows: TaskType[];
+};
 
 export type TaskBoardType = {
-   title: string
-   columns: TaskColumnType[]
-}
+	title: string;
+	columns: TaskColumnType[];
+};
 
 type Props = (
-	 // this is just setState
-   setColumns: React.Dispatch<React.SetStateAction<TaskColumnType[]>>,
-   source: DraggableLocation, // { draggableId, index }
-   destination: DraggableLocation, // { draggableId, index }
-) => void
+	// this is just setState
+	setColumns: React.Dispatch<React.SetStateAction<TaskColumnType[]>>,
+	source: DraggableLocation, // { draggableId, index }
+	destination: DraggableLocation, // { draggableId, index }
+) => void;
 ```
 
 handleColumnMove
 
 ```tsx
 type TaskBoardType = {
-   title: string
-   columns: TaskColumnType[]
-}
+	title: string;
+	columns: TaskColumnType[];
+};
 // our column state is just Columns ^
 
 const handleColumnMove: DragDropProps = (source, destination) =>
-  // rememeber that source and dest are just { draggableId, index }
-  // moving columns (:
-  setColumns((prev) => {
-		 // this is some computer science stuff with mutability go ask justin lol
-     const updated = [...prev]
-     // remove source column
-     const [removed] = updated.splice(source.index, 1)
-     // insert source column at new destination
-     updated.splice(destination.index, 0, removed)
-     return updated
-  })
+	// rememeber that source and dest are just { draggableId, index }
+	// moving columns (:
+	setColumns((prev) => {
+		// this is some computer science stuff with mutability go ask justin lol
+		const updated = [...prev];
+		// remove source column
+		const [removed] = updated.splice(source.index, 1);
+		// insert source column at new destination
+		updated.splice(destination.index, 0, removed);
+		return updated;
+	});
 ```
 
-Easy right? now let’s get to the pain
+The preceding steps have proven to be relatively straightforward, wouldn't you agree? However, it is now time to confront a more challenging aspect of our implementation.
 
-Now for the rows, remember that there is two conditions we need to account for...
-
-the first of these conditions is moving the rows in the same column, and the other is to account for moving rows BETWEEN columns.
+When it comes to handling rows, we must consider two distinct conditions. Firstly, we need to address the movement of rows within the same column. Secondly, we must account for the scenario where rows are being moved between columns. These conditions require careful consideration and appropriate handling to ensure the smooth operation of our drag and drop functionality.
 
 ```tsx
 // determining if its diff col or same col for row movement
 const handleRowMove: DragDropProps = (source, destination) => {
-  // droppableId is in reference to what column it is so if they are the same,
-  // then both droppableId's are the same,
-  // if its diff columns then they not the same
-  // btw since columns are dynamically instantiated, the droppableId i used is uuid
+	// droppableId is in reference to what column it is so if they are the same,
+	// then both droppableId's are the same,
+	// if its diff columns then they not the same
+	// btw since columns are dynamically instantiated, the droppableId i used is uuid
 
-  if (source.droppableId !== destination.droppableId) {
-     moveRowDifferentColumn(source, destination)
-  } else {
-     moveRowSameColumn(source, destination)
-  }
-}
+	if (source.droppableId !== destination.droppableId) {
+		moveRowDifferentColumn(source, destination);
+	} else {
+		moveRowSameColumn(source, destination);
+	}
+};
 ```
 
 ```tsx
 // props are the same ^^
 export const moveRowDifferentColumn: Props = (setColumns, source, destination) => {
-   // moving rows between columns
-   setColumns((prev) => {
-			const updated = [...prev]
-      // filter out which column is the source and which is the destination
-      const [sourceColumn] = updated.filter(({ id }) => id === source.droppableId)
-      const [destinationColumn] = updated.filter(({ id }) => id === destination.droppableId)
+	// moving rows between columns
+	setColumns((prev) => {
+		const updated = [...prev];
+		// filter out which column is the source and which is the destination
+		const [sourceColumn] = updated.filter(({ id }) => id === source.droppableId);
+		const [destinationColumn] = updated.filter(({ id }) => id === destination.droppableId);
 
-      // extract the rows from the columnn
-      const sourceRow = sourceColumn.rows
-      const destinationRow = destinationColumn.rows
+		// extract the rows from the columnn
+		const sourceRow = sourceColumn.rows;
+		const destinationRow = destinationColumn.rows;
 
-      // remove the source item
-      const [removed] = sourceRow.splice(source.index, 1)
-      // insert the source item at the new index
-      destinationRow.splice(destination.index, 0, removed)
+		// remove the source item
+		const [removed] = sourceRow.splice(source.index, 1);
+		// insert the source item at the new index
+		destinationRow.splice(destination.index, 0, removed);
 
-      return updated
-   })
-}
+		return updated;
+	});
+};
 ```
 
 ```tsx
 // same props ^^
 export const moveRowSameColumn: Props = (setColumns, source, destination) => {
-   // moving rows in same column
-   setColumns((prev) => {
-			const updated = [...prev]
-      // isolate the row of the column we want to adjust
-      const [{ rows }] = updated.filter(({ id }) => id === source.droppableId)
-      // remove the source item
-      const [removed] = rows.splice(source.index, 1)
-      // insert the source item at the new index
-      rows.splice(destination.index, 0, removed)
-      return updated
-   })
-}
+	// moving rows in same column
+	setColumns((prev) => {
+		const updated = [...prev];
+		// isolate the row of the column we want to adjust
+		const [{ rows }] = updated.filter(({ id }) => id === source.droppableId);
+		// remove the source item
+		const [removed] = rows.splice(source.index, 1);
+		// insert the source item at the new index
+		rows.splice(destination.index, 0, removed);
+		return updated;
+	});
+};
 ```
 
-### Ok I REALLY NEED YOUR ATTENTION FOR THIS ONE, let’s talk about custom placeholders.
+### Your utmost attention is requested as we delve into a crucial topic: custom placeholders.
 
-let’s say in this specific project you are required to have a custom placeholder to display the droppable area for the item you are dragging. Honestly, this library doesn’t love when you do this, but this is Tobias code and Tobias code works best in chaos 😈 🔥
+Consider a scenario in which your specific project necessitates the use of a custom placeholder to visually represent the droppable area for the item being dragged. It is worth noting that while this library may not inherently support this customization, but it is possible with a little bit of hacking.
 
-So you know how we discussed the onDragEnd prop on DragDropContext ? well let me introduce you to their cousins onDragStart and onDragUpdate
+Now, let us revisit the onDragEnd prop we previously discussed within the DragDropContext and allow me to introduce you to its counterparts: onDragStart and onDragUpdate.
 
-If onDragEnd triggers on the release of the dragging, then onDragStart triggers when the dragging begins, and the onDragUpdate is triggered once the item you are dragging interacts with another.
+While onDragEnd triggers upon the release of the drag operation, onDragStart is invoked at the onset of dragging, and onDragUpdate is triggered whenever the dragged item interacts with another element.
 
-updated DragDropContext ! and state
+This marks an updated state of our DragDropContext and the associated state variables, which will be pivotal in our continued exploration.
 
 ```tsx
 const [colDropshadowProps, setColDropshadowProps] = useState<{ marginLeft: number; height: number }>({
@@ -496,29 +488,29 @@ const [rowDropshadowProps, setRowDropshadowProps] = useState<{ marginTop: number
 <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} onDragUpdate={handleDragUpdate}>
 ```
 
-okay! so lets start appropriately with onDragStart. onDragStart takes in an event which renders out to ... 
+okay! so lets start appropriately with onDragStart. onDragStart takes in an event which renders out to ...
 
 ```tsx
 // row event
 {
-	draggableId: "d38b1d78-4f5e-47dd-b939-74e1a95ac761"
-	type: "row"
+	draggableId: 'd38b1d78-4f5e-47dd-b939-74e1a95ac761';
+	type: 'row';
 	source: {
-		droppableId: "53405e67-3c88-42a7-8ca7-a51ef5923726"
-		index: 0
+		droppableId: '53405e67-3c88-42a7-8ca7-a51ef5923726';
+		index: 0;
 	}
-	mode: "FLUID"
+	mode: 'FLUID';
 }
 
 // column event
 {
-	draggableId: "53405e67-3c88-42a7-8ca7-a51ef5923726"
-	type: "column"
+	draggableId: '53405e67-3c88-42a7-8ca7-a51ef5923726';
+	type: 'column';
 	source: {
-		droppableId: "all-columns"
-		index: 0
+		droppableId: 'all-columns';
+		index: 0;
 	}
-	mode: "FLUID"
+	mode: 'FLUID';
 }
 ```
 
@@ -528,14 +520,14 @@ Then our onDragStart function will execute as such:
 
 ```tsx
 const handleDragStart = (event) => {
-  // the destination and source colIndex will be the same for start
-  const { index } = event.source
-  if (event.type === 'column') {
-     handleDropshadowColumn(event, index, index)
-  } else {
-     handleDropshadowRow(event, index, index)
-  }
-}
+	// the destination and source colIndex will be the same for start
+	const { index } = event.source;
+	if (event.type === 'column') {
+		handleDropshadowColumn(event, index, index);
+	} else {
+		handleDropshadowRow(event, index, index);
+	}
+};
 ```
 
 Not too bad right? Before we jump into the logic of the placeholder, lets get onDragUpdate out of the way because they are quite similar
@@ -544,14 +536,14 @@ like discussed above, onDragUpdate is triggered once a draggable item is moved (
 
 ```tsx
 const handleDragUpdate = (event) => {
-  const { source, destination } = event
-  if (!destination) return
-  if (event.type === 'column') {
-     handleDropshadowColumn(event, destination.index, source.index)
-  } else {
-     handleDropshadowRow(event, destination.index, source.index)
-  }
-}
+	const { source, destination } = event;
+	if (!destination) return;
+	if (event.type === 'column') {
+		handleDropshadowColumn(event, destination.index, source.index);
+	} else {
+		handleDropshadowRow(event, destination.index, source.index);
+	}
+};
 ```
 
 Cool! so as you can see they are pretty similar because ultimately they serve the same function, just two different edge cases
@@ -561,44 +553,39 @@ Now let’s dig into the meat of the problem starting with column
 ```tsx
 // handle the manipulation of placeholder for column
 type ColumnDropshadowProps = (
-   event: any,
-   setColDropshadowProps: React.Dispatch<
-      React.SetStateAction<{
-         marginLeft: number
-         height: number
-      }>
-   >,
-   destinationIndex: number,
-   sourceIndex: number,
-) => void
+	event: any,
+	setColDropshadowProps: React.Dispatch<
+		React.SetStateAction<{
+			marginLeft: number;
+			height: number;
+		}>
+	>,
+	destinationIndex: number,
+	sourceIndex: number,
+) => void;
 
 const handleDropshadowColumn: ColumnDropshadowProps = (event, destinationIndex, sourceIndex) => {
-  // isolate element we are dragging
-  const draggedElement: Element | Node | null = getDraggedElement(event.draggableId)!
-     .parentNode!.parentNode
-  // if nothing is being dragged return
-  if (!draggedElement) return
-  // isolate the height of element to determine the height of element being dragged
-  const { clientHeight } = draggedElement as Element
-  // returning the manipulated array of dom elements
-  const updatedChildrenArray: Element[] = getUpdatedChildrenArray(
-     draggedElement as Element,
-     destinationIndex,
-     sourceIndex,
-  )
-  // grabbing the # for marginLeft
-  const marginLeft = getStyle(
-     updatedChildrenArray,
-     destinationIndex,
-     'marginRight',
-     'clientWidth',
-  )
-  // setting props
-  setColDropshadowProps({
-     height: clientHeight,
-     marginLeft,
-  })
-}
+	// isolate element we are dragging
+	const draggedElement: Element | Node | null = getDraggedElement(event.draggableId)!.parentNode!
+		.parentNode;
+	// if nothing is being dragged return
+	if (!draggedElement) return;
+	// isolate the height of element to determine the height of element being dragged
+	const { clientHeight } = draggedElement as Element;
+	// returning the manipulated array of dom elements
+	const updatedChildrenArray: Element[] = getUpdatedChildrenArray(
+		draggedElement as Element,
+		destinationIndex,
+		sourceIndex,
+	);
+	// grabbing the # for marginLeft
+	const marginLeft = getStyle(updatedChildrenArray, destinationIndex, 'marginRight', 'clientWidth');
+	// setting props
+	setColDropshadowProps({
+		height: clientHeight,
+		marginLeft,
+	});
+};
 ```
 
 So yeah, it’s a lot, but in simple terms we are:
@@ -636,173 +623,153 @@ const getDraggedElement = (draggableId) => {
 }
 ```
 
-Alrighty, so getDraggedElement is returning the placeholder domElement by isolating it by its attribute in the html (if you go to the live site and to tasks/general you can see this queryAttr attached to a div and that div is the invisible placeholder put up by { provided.placeholder }.
+Alrighty, so getDraggedElement is returning the placeholder domElement by isolating it by its attribute in the html
 
 ```tsx
-
 // updating the array of the placeholder by switching out the source and destination index
 const getUpdatedArray = (
-   draggedElement: Element,
-   event,
-   destinationIndex: number,
-   sourceIndex: number,
+	draggedElement: Element,
+	event,
+	destinationIndex: number,
+	sourceIndex: number,
 ) => {
-   // grab children of the node
-   const children = [...draggedElement!.parentNode!.children]
-   // if the indexes are the same (onDragStart) just return the dom array
-   if (destinationIndex === sourceIndex) return children
-   // get the div of item being dragged
-   const draggedItem = children[sourceIndex]
+	// grab children of the node
+	const children = [...draggedElement!.parentNode!.children];
+	// if the indexes are the same (onDragStart) just return the dom array
+	if (destinationIndex === sourceIndex) return children;
+	// get the div of item being dragged
+	const draggedItem = children[sourceIndex];
 
-   // remove source
-   children.splice(sourceIndex, 1)
+	// remove source
+	children.splice(sourceIndex, 1);
 
-   // return updated array by inputting dragged item
-   return children.splice(0, destinationIndex, draggedItem)
-}
+	// return updated array by inputting dragged item
+	return children.splice(0, destinationIndex, draggedItem);
+};
 ```
 
 This function rearranges the dom array to determine where to place the placeholder to determine the offset of the placeholder
 
 ```tsx
 const getStyle = (
-   updatedChildrenArray: Element[],
-   destinationIndex: number,
-   property: string,
-   clientDirection: 'clientHeight' | 'clientWidth',
+	updatedChildrenArray: Element[],
+	destinationIndex: number,
+	property: string,
+	clientDirection: 'clientHeight' | 'clientWidth',
 ) =>
-   updatedChildrenArray.slice(0, destinationIndex).reduce((total, curr) => {
-      // get the style object of the item
-      const style = window.getComputedStyle(curr)
-      // isolate the # of the property desired
-      const prop = parseFloat(style[property])
-      return total + curr[clientDirection] + prop
-   }, 0)
+	updatedChildrenArray.slice(0, destinationIndex).reduce((total, curr) => {
+		// get the style object of the item
+		const style = window.getComputedStyle(curr);
+		// isolate the # of the property desired
+		const prop = parseFloat(style[property]);
+		return total + curr[clientDirection] + prop;
+	}, 0);
 ```
 
-So honestly, I am not 100% on what this actually does, I am pretty sure it is 
+To be frank, I do not possess complete certainty regarding the precise functionality of this code snippet. However, based on my understanding, it appears to involve the following steps:
 
-- getting the width of each object
-- getting the margin which we are setting in our style
-- getting the summation of it to determine how far from the origin it is
+-Acquiring the width measurement of each object.
+-Retrieving the margin value specified within the associated style.
+-Calculating the cumulative sum of the widths and margins to determine the offset from the origin.
+-Allow me to provide an illustrative example. Suppose we have an object with a width of 300px, accompanied by a 10px margin on each side, resulting in an effective width of 320px.
 
-lets say our width is 300px, with 10px on each side so our effective size is 320px
+To determine the position of the object at the 3rd index (4th in the array), we can perform the following calculation:
 
-and now lets calculate what the 3rd index position (#4 in the array) by doing
+320px \* 4 = 1280px
 
-320 * 4 = 1280
-
-so our placeholder is roughly 1280px from the origin (this is not actually how it works but this is the closest my brain can get lmfao)
+Hence, the placeholder is approximately 1280px away from the origin. It is important to note that while this example is provided for explanatory purposes, it may not accurately represent the precise inner workings of the code. Please bear in mind that this explanation reflects the extent of my understanding.
 
 ```tsx
 // handle the manipulation of placeholder for row
 type RowDropshadowProps = (
-   event: any,
-   setRowDropshadowProps: React.Dispatch<
-      React.SetStateAction<{
-         marginTop: number
-         height: number
-      }>
-   >,
-   destinationIndex: number,
-   sourceIndex: number,
-) => void
+	event: any,
+	setRowDropshadowProps: React.Dispatch<
+		React.SetStateAction<{
+			marginTop: number;
+			height: number;
+		}>
+	>,
+	destinationIndex: number,
+	sourceIndex: number,
+) => void;
 
 const handleDropshadowRow: RowDropshadowProps = (event, destinationIndex, sourceIndex) => {
-      // isolating the element being dragged
-      const draggedElement = getDraggedElement(event.draggableId)
-      // if we aint draggin anything return
-      if (!draggedElement) return
-      // isolate the height of element to determine the height of element being dragged
-      const { clientHeight } = draggedElement as Element
-      // returning the manipulated array of dom elements
-      const updatedChildrenArray: Element[] = getUpdatedChildrenArray(
-         draggedElement as Element,
-         destinationIndex,
-         sourceIndex,
-      )
-      // grabbing the # for marginTop
-      const marginTop = getStyle(
-         updatedChildrenArray,
-         destinationIndex,
-         'marginBottom',
-         'clientHeight',
-      )
-      // setting our props
-			// also the + 2 and all that other stuff is just
-			// bc i couldnt get it to work so if you wanna see it done right
-			// its DragDropContext.tsx in context/taskboard
-      setRowDropshadowProps({
-         height: clientHeight + 2,
-         marginTop: marginTop + 2 * destinationIndex,
-      })
-   }
+	// isolating the element being dragged
+	const draggedElement = getDraggedElement(event.draggableId);
+	// if we aint draggin anything return
+	if (!draggedElement) return;
+	// isolate the height of element to determine the height of element being dragged
+	const { clientHeight } = draggedElement as Element;
+	// returning the manipulated array of dom elements
+	const updatedChildrenArray: Element[] = getUpdatedChildrenArray(
+		draggedElement as Element,
+		destinationIndex,
+		sourceIndex,
+	);
+	// grabbing the # for marginTop
+	const marginTop = getStyle(
+		updatedChildrenArray,
+		destinationIndex,
+		'marginBottom',
+		'clientHeight',
+	);
+
+	setRowDropshadowProps({
+		height: clientHeight + 2,
+		marginTop: marginTop + 2 * destinationIndex,
+	});
+};
 ```
 
-For the row it is extremely similar as well with a few discrepancies , mainly we aren’t grabbing parent nodes bc we put the draggable on the div itself, not the title
+For the row it is extremely similar as well with a few discrepancies, mainly we aren’t grabbing parent nodes bc we put the draggable on the div itself, not the title
 
 Cool! so now we have everything working, now we just need to actually make our placeholder div.
 
 ```tsx
 type DropshadowProps = {
-   height: number
-}
+	height: number;
+};
 
 export const Dropshadow = styled.div<DropshadowProps>`
-   border-radius: 3px;
-   background-color: #ddd;
-   width: 302px;
-   height: ${({ height }) => height}px;
-   z-index: 1;
-`
+	border-radius: 3px;
+	background-color: #ddd;
+	width: 302px;
+	height: ${({ height }) => height}px;
+	z-index: 1;
+`;
 
 type ColumnDropshadowProps = {
-   marginLeft: number
-}
+	marginLeft: number;
+};
 
 export const ColumnDropshadow = styled(Dropshadow)<ColumnDropshadowProps>`
-   margin-left: ${({ marginLeft }) => marginLeft - 1}px;
-   position: absolute;
-`
+	margin-left: ${({ marginLeft }) => marginLeft - 1}px;
+	position: absolute;
+`;
 
 type RowDropshadowProps = {
-   marginTop: number
-}
+	marginTop: number;
+};
 
 export const RowDropshadow = styled(Dropshadow)<RowDropshadowProps>`
-   margin-top: ${({ marginTop }) => `${marginTop}px`};
-`
+	margin-top: ${({ marginTop }) => `${marginTop}px`};
+`;
 ```
 
-so bc our row and column drop shadows are going to be super similar we are going to make a generic Dropshadow component and utilize inheritance 
+In order to streamline the implementation of drop shadows for both row and column components, we will create a generic Dropshadow component and leverage inheritance. It is worth noting that while the height value is retrieved from the props for both rows and columns, the margin will be rendered differently using marginLeft for columns and marginTop for rows.
 
-so notice that we are inputting our height taken from our props on both row and column, but our margin will render out different via marginLeft && marginTop for column and row respectively 
+Now, allow me to offer some valuable advice based on my previous experience, which involved an entire day of debugging and questioning my professional qualifications.
 
-NOW let me give you some future advice that took me an entire day to debug and make me question my entire career and qualifications 
+During the initial planning phase of drop shadow functionality, I utilized position: absolute for the drop shadow element. As is often the case when working with absolute positioning, my instinct was to employ top, bottom, right, and left properties. However, I made a critical mistake. I failed to recognize that top, bottom, right, and left properties are determined solely based on the viewport or the effective size of the container, without taking into account the actual size (including scrollable content).
 
-so when I originally did the planning of how drop shadows worked, I obviously used position: absolute; for the dropshadow, and generally when using absolute, your immediate reaction will be utilizing top, bottom, right, left. 
+Initially, everything appeared to be functioning perfectly since my container did not overflow. However, upon testing for edge cases, I discovered that the drop shadow was significantly misaligned due to the scroll offset. To rectify this issue, my initial solution involved accounting for the scroll offset by calculating the difference and adjusting my calculations accordingly. To accomplish this, I created a hook that constantly monitored the scroll offset, firing an event for every pixel scrolled. However, this approach proved to be slow and necessitated throttling.
 
-This was my horrible mistake. Little did my tiny peanut monkey brain know, that top, bottom, right, left, only cares about the current viewport / effective size of the container WITHOUT CARING about the ACTUAL size of it (with accounting for scrolling)
+Finding the optimal balance between a smooth animation and memory efficiency became a daunting task. After numerous attempts, including implementing a counter-based throttling mechanism, I finally had an epiphany after six hours of relentless debugging.
 
-so when i was developing the feature, it worked perfectly because my container did not overflow, but the moment i tested for edge cases, dropshadow would be wildly offbase with the scroll offset because my calculations are in relativity to actual size being applied to a div that ONLY cares about viewport
+In a moment of inspiration, I questioned whether utilizing margin would provide a viable solution. I pondered if positioning the parent container as absolute and placing it below the task board would allow me to use absolute positioning on the div itself. Despite exploring this approach, experimenting with z-indexes, and adjusting the layout, I encountered issues where dragging a row caused it to appear behind other elements. After extensively manipulating z-indexes and revisiting various techniques, I realized that I needed to return to square one: how to effectively combine margin and absolute positioning without relying on a parent container.
 
+I must admit that I was initially unaware of the seamless integration of margin and absolute positioning. It took a significant amount of time and self-reflection, as well as a blow to my ego and an existential crisis, to come to this realization. However, as a humble individual (although I would not ordinarily label myself as such, it is what others have described me as /s), I can accept defeat and acknowledge my growth from this experience.
 
-so my next thought was “OK let’s account for the scroll offset and take the difference so our calculations are accurate”
+In conclusion, let us reintegrate all the elements and adhere to the original plan. Instead of using left, we will utilize margin-left, and instead of top, we will employ margin-top.
 
-i went through the whole process of making a hook that gathers the scroll offset and fires off EVERY PIXEL SCROLLED returning the offset number that i can subtract, but it was obviously slow so  i needed to throttle it.
-
-now the issue is throttling it too hard will result in a choppy animation, but not throttling it enough will cause heavy memory issues. So i did my if (counter % 2 === 0) and all that jazz until I had epiphany after i shit you not 6 hours of debugging
-
-its supposed to mean over engineering its a stretch i know
-
-“would margin work? if i make the parent container position: absolute; and float that container below the task board could i not do position: absolute; on the div?”
-
-went through that all and messed with z-indexes but manipulating z-indexes gave me issues of when dragging a row, it would appear behind. So after so much time messing with z-indexes i went back to square one: how do i utilize margin and absolute without needing the parent
-
-dont show this to paolo
-
-now, i know you’re asking yourself: “TOBIAS !?! HOW ARE YOU NOT AWARE THAT YOU CAN USE MARGIN ANNNNND ABSOLUTE TOGETHER?!?!??!?! YOU'RE SOOOOO GOOD AT CSS WTFFFF?!??!?!” I know, I know, as a humble man myself (i would never personally call myself humble but it’s just what i have heard and who am i to deny what the people call me), i can accept defeat no matter how much it gave me an existential crisis and crushed my ego
-
-so lets put it all back together and go with my original plan but instead of left we use margin-left and instead of top we use margin-top !!!
-
-so yeah there’s the struggle right there, thanks for reading (((’: 
+I appreciate your patience in reading through this account of my struggle. Thank you.
